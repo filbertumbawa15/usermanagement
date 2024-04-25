@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Models\ConfigModulMenu;
-use App\Http\Requests\StoreConfigModulMenuRequest;
-use App\Http\Requests\UpdateConfigModulMenuRequest;
+use App\Http\Controllers\Controller;
+use App\Models\ConfigModulAkses;
+use App\Http\Requests\StoreConfigModulAksesRequest;
+use App\Http\Requests\UpdateConfigModulAksesRequest;
 
-class ConfigModulMenuController extends Controller
+class ConfigModulAksesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +28,7 @@ class ConfigModulMenuController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreConfigModulMenuRequest $request)
+    public function store(StoreConfigModulAksesRequest $request)
     {
         //
     }
@@ -35,7 +36,7 @@ class ConfigModulMenuController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ConfigModulMenu $configModulMenu)
+    public function show(ConfigModulAkses $configModulAkses)
     {
         //
     }
@@ -43,7 +44,7 @@ class ConfigModulMenuController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ConfigModulMenu $configModulMenu)
+    public function edit(ConfigModulAkses $configModulAkses)
     {
         //
     }
@@ -51,7 +52,7 @@ class ConfigModulMenuController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateConfigModulMenuRequest $request, ConfigModulMenu $configModulMenu)
+    public function update(UpdateConfigModulAksesRequest $request, ConfigModulAkses $configModulAkses)
     {
         //
     }
@@ -59,7 +60,7 @@ class ConfigModulMenuController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ConfigModulMenu $configModulMenu)
+    public function destroy(ConfigModulAkses $configModulAkses)
     {
         //
     }

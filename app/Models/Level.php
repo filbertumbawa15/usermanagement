@@ -9,4 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 class Level extends Model
 {
     use HasFactory, HasUuids;
+
+    protected $table = "config_level";
 }

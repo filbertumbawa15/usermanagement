@@ -35,10 +35,10 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $token = $this->generateToken($user);
+            // $token = $this->generateToken($user);
             return response([
                 'user' => $user,
-                'access_token' => $token,
+                'access_token' => Auth::user()->createToken('accessToken')->accessToken,
             ]);
         } else {
             return response([

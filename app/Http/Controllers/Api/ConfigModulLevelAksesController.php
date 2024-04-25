@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\ConfigModulLevelAkses;
 use App\Http\Requests\StoreConfigModulLevelAksesRequest;
 use App\Http\Requests\UpdateConfigModulLevelAksesRequest;
