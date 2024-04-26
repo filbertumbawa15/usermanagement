@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ConfigModulAksesController;
+use App\Http\Controllers\Api\LevelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,7 +24,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware(['auth:api'])->group(function () {
-    Route::get('/anjay', function () {
-        echo "bangsat";
-    });
+    Route::resource('level', LevelController::class)->whereNumber('level');
+    Route::get('checkaccessmodule', [ConfigModulAksesController::class, 'checkAccessModule']);
 });

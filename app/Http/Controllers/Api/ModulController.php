@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Modul;
 use App\Http\Requests\StoreModulRequest;
 use App\Http\Requests\UpdateModulRequest;
+use Illuminate\Support\Facades\DB;
 
 class ModulController extends Controller
 {
@@ -14,7 +15,34 @@ class ModulController extends Controller
      */
     public function index()
     {
-        //
+        $limit = request('limit') ?? 10;
+        $page = request('page') ?? 1;
+
+
+        $query = DB::table((new Modul)->getTable());
+        $totalRecords = $query->count();
+
+        if (request('filters')) {
+            foreach (request('filters') as $index => $filter) {
+                $query = $query->orWhere($index, 'LIKE', "%$filter%");
+            }
+
+            $totalRecords = $query->count();
+        }
+
+        if (isset(request('sorts')['column']) && isset(request('sorts')['direction'])) {
+            $query = $query->orderBy(request('sorts')['column'], request('sorts')['direction']);
+        }
+
+        $totalPages = ceil($totalRecords / $limit);
+
+        $categories = $query->skip(($page - 1) * $limit)->take($limit)->get();
+
+        return response([
+            'totalRecords' => $totalRecords,
+            'totalPages' => $totalPages,
+            'data' => $categories,
+        ]);
     }
 
     /**
@@ -30,21 +58,52 @@ class ModulController extends Controller
      */
     public function store(StoreModulRequest $request)
     {
-        //
+        $data = [
+            'nama' => $request->nama,
+            'folder' => $request->folder,
+            'icon' => $request->icon,
+            'urutan' => $request->urutan,
+            'logo' => $request->logo,
+        ];
+
+        DB::beginTransaction();
+        try {
+            $modul = (new Modul())->processStore($data);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Berhasil disimpan.',
+                'data' => $modul,
+            ], 201);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Modul $modul)
+    public function show($id)
     {
-        //
+        $level = Modul::where('uuid', $id);
+        if ($level) {
+            return response([
+                'data' => $level
+            ]);
+        }
+
+        return response([
+            'message' => 'No data found',
+        ], 404);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Modul $modul)
+    public function edit(Modul $level)
     {
         //
     }
@@ -54,14 +113,50 @@ class ModulController extends Controller
      */
     public function update(UpdateModulRequest $request, Modul $modul)
     {
-        //
+        $data = [
+            'nama' => $request->nama,
+            'folder' => $request->folder,
+            'icon' => $request->icon,
+            'urutan' => $request->urutan,
+            'logo' => $request->logo,
+        ];
+
+        DB::beginTransaction();
+        try {
+            $modul = (new Modul())->processUpdate($modul, $data);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Berhasil diubah.',
+                'data' => $modul,
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Modul $modul)
+    public function destroy($id)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $modul = (new Modul())->processDestroy($id);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Berhasil dihapus',
+                'data' => $modul
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 }
