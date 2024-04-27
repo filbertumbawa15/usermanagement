@@ -55,14 +55,13 @@ class ConfigModulAkses extends Model
         return $del;
     }
 
-    public function checkAccessModule()
+    public function checkAccessModule($id)
     {
         $data = [];
-
         $module = DB::table('config_user')
             ->leftJoin('config_modul_akses', 'config_user.id_level', 'config_modul_akses.id_level')
             ->leftJoin('config_modul', 'config_modul.uuid', 'config_modul_akses.id_config_modul')
-            ->where('config_user.uuid', auth('api')->user()->uuid)
+            ->where('config_user.uuid', $id)
             ->orderBy('config_modul.urutan', 'asc')
             ->get([
                 'config_modul.uuid',

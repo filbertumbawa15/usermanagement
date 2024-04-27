@@ -25,5 +25,5 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware(['auth:api'])->group(function () {
     Route::resource('level', LevelController::class)->whereNumber('level');
-    Route::get('checkaccessmodule', [ConfigModulAksesController::class, 'checkAccessModule']);
+    Route::get('checkaccessmodule/{id}', [ConfigModulAksesController::class, 'checkAccessModule']);
 });

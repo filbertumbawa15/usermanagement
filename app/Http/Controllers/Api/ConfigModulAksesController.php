@@ -152,9 +152,9 @@ class ConfigModulAksesController extends Controller
         }
     }
 
-    public function checkAccessModule()
+    public function checkAccessModule($id)
     {
-        $checkAccessModule = (new ConfigModulAkses())->checkAccessModule();
+        $checkAccessModule = (new ConfigModulAkses())->checkAccessModule($id);
 
         return $checkAccessModule;
     }
