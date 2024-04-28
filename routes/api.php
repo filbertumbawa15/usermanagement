@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ConfigModulAksesController;
+use App\Http\Controllers\Api\ConfigModulMenuController;
+use App\Http\Controllers\Api\ConfigModulLevelAksesController;
 use App\Http\Controllers\Api\LevelController;
+use App\Http\Controllers\Api\ModulController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +27,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware(['auth:api'])->group(function () {
-    Route::resource('level', LevelController::class)->whereNumber('level');
+    Route::resource('level', LevelController::class)->whereUuid('level');
     Route::get('checkaccessmodule/{id}', [ConfigModulAksesController::class, 'checkAccessModule']);
+    Route::get('getmenu', [ConfigModulMenuController::class, 'getMenu']);
+    Route::get('configmodullevelakses/haspermission', [ConfigModulLevelAksesController::class, 'hasPermission']);
+    Route::resource('modul', ModulController::class)->whereUuid('modul');
+    Route::resource('menu', ConfigModulMenuController::class)->whereUuid('menu');
 });

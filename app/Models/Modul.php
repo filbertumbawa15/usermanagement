@@ -11,4 +11,18 @@ class Modul extends Model
     use HasFactory, HasUuids;
 
     protected $table = "config_modul";
+
+    protected $casts = [
+        'id' => 'string',
+    ];
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
 }

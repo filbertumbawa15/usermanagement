@@ -8,6 +8,7 @@ use App\Http\Requests\StoreModulRequest;
 use App\Http\Requests\UpdateModulRequest;
 use Illuminate\Support\Facades\DB;
 
+
 class ModulController extends Controller
 {
     /**
@@ -86,18 +87,15 @@ class ModulController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(string $id)
     {
-        $level = Modul::where('uuid', $id);
-        if ($level) {
-            return response([
-                'data' => $level
-            ]);
-        }
+        $data = Modul::where('uuid', $id)->first();
+        $levelData = Modul::rightJoin('config_modul_akses', 'config_modul.uuid', 'config_modul_akses.id_config_modul')->where('config_modul.uuid', $id)->get();
 
         return response([
-            'message' => 'No data found',
-        ], 404);
+            'data' => $data,
+            'levelData' => $levelData,
+        ]);
     }
 
     /**

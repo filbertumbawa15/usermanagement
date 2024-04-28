@@ -7,6 +7,7 @@ use App\Models\User;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ConfigModulMenu;
 
 class AuthController extends Controller
 {
@@ -35,7 +36,6 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            // $token = $this->generateToken($user);
             return response([
                 'user' => $user,
                 'access_token' => Auth::user()->createToken('accessToken')->accessToken,

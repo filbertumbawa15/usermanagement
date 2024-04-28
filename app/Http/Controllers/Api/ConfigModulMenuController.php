@@ -7,6 +7,7 @@ use App\Models\ConfigModulMenu;
 use App\Http\Requests\StoreConfigModulMenuRequest;
 use App\Http\Requests\UpdateConfigModulMenuRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class ConfigModulMenuController extends Controller
 {
@@ -19,12 +20,20 @@ class ConfigModulMenuController extends Controller
         $page = request('page') ?? 1;
 
 
-        $query = DB::table((new ConfigModulMenu)->getTable());
+        $query = DB::table((new ConfigModulMenu)->getTable())->select('config_modul_menu.*', 'config_modul.nama as nama_modul', 'menuparent.nama_menu as nama_menu_parent')->leftJoin('config_modul', 'config_modul_menu.id_config_modul', 'config_modul.uuid')->leftJoin('config_modul_menu as menuparent', 'config_modul_menu.id_parent', 'menuparent.uuid');
         $totalRecords = $query->count();
 
         if (request('filters')) {
             foreach (request('filters') as $index => $filter) {
-                $query = $query->orWhere($index, 'LIKE', "%$filter%");
+                if($index == "nama_menu"){
+                    $query = $query->orWhere('config_modul_menu.nama_menu', 'LIKE', "%$filter%");
+                } else if ($index == "nama_menu_parent") {
+                    $query = $query->orWhere('menuparent.nama_menu', 'LIKE', "%$filter%");
+                } else if ($index == "nama_modul") {
+                    $query = $query->orWhere('config_modul.nama', 'LIKE', "%$filter%");
+                } else{
+                    $query = $query->orWhere("config_modul_menu.$index", 'LIKE', "%$filter%");
+                }
             }
 
             $totalRecords = $query->count();
@@ -88,7 +97,7 @@ class ConfigModulMenuController extends Controller
      */
     public function show($id)
     {
-        $configModulMenu = ConfigModulMenu::where('uuid', $id);
+        $configModulMenu = DB::table((new ConfigModulMenu)->getTable())->select('config_modul_menu.*', 'config_modul.nama as nama_modul', 'menuparent.nama_menu as nama_menu_parent')->leftJoin('config_modul', 'config_modul_menu.id_config_modul', 'config_modul.uuid')->leftJoin('config_modul_menu as menuparent', 'config_modul_menu.id_parent', 'menuparent.uuid')->where('config_modul_menu.uuid',$id)->first();
         if ($configModulMenu) {
             return response([
                 'data' => $configModulMenu,
@@ -154,5 +163,11 @@ class ConfigModulMenuController extends Controller
             DB::rollBack();
             throw $th;
         }
+    }
+
+    public function getMenu(Request $request)
+    {
+        $getMenu = (new ConfigModulMenu())->getMenu($request->config_modul, 0);
+        return $getMenu;
     }
 }

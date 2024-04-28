@@ -58,4 +58,11 @@ class ConfigModulLevelAkses extends Model
         $del = $configModulLevelAkses->where('id', $id)->delete();
         return $del;
     }
+
+    public function hasPermission($param)
+    {
+        $data = ConfigModulLevelAkses::leftJoin('config_modul_menu', 'config_modul_level_akses.id_menu', '=', 'config_modul_menu.uuid')->where('config_modul_menu.link', $param)->where('config_modul_level_akses.id_level', auth()->user()->id_level)->first(['config_modul_level_akses.baca', 'config_modul_level_akses.tulis', 'config_modul_level_akses.ubah', 'config_modul_level_akses.hapus', 'config_modul_menu.link']);
+
+        return $data;
+    }
 }

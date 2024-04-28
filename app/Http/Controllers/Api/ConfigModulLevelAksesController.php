@@ -7,6 +7,7 @@ use App\Models\ConfigModulLevelAkses;
 use App\Http\Requests\StoreConfigModulLevelAksesRequest;
 use App\Http\Requests\UpdateConfigModulLevelAksesRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class ConfigModulLevelAksesController extends Controller
 {
@@ -160,5 +161,11 @@ class ConfigModulLevelAksesController extends Controller
             DB::rollBack();
             throw $th;
         }
+    }
+
+    public function hasPermission(Request $request)
+    {
+        $result = (new ConfigModulLevelAkses())->hasPermission($request->accessMenu);
+        return $result;
     }
 }
