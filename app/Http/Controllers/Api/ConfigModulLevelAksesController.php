@@ -59,26 +59,21 @@ class ConfigModulLevelAksesController extends Controller
      */
     public function store(StoreConfigModulLevelAksesRequest $request)
     {
-        $data = [
-            'id_level' => $request->id_level,
-            'id_menu' => $request->id_menu,
-            'baca' => $request->baca,
-            'tulis' => $request->tulis,
-            'ubah' => $request->ubah,
-            'hapus' => $request->hapus,
-        ];
-
         DB::beginTransaction();
         try {
+            $data = [
+                'id_level' => $request->id_level,
+                'dataMenu' => $request->dataMenu,
+            ];
             $configModulLevelAkses = (new ConfigModulLevelAkses())->processStore($data);
 
-            DB::commit();
+            // DB::commit();
 
             return response()->json([
                 'status' => true,
                 'message' => 'Berhasil disimpan.',
                 'data' => $configModulLevelAkses,
-            ], 201);
+            ], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;
