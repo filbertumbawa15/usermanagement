@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Modul;
 use App\Http\Requests\StoreModulRequest;
 use App\Http\Requests\UpdateModulRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 
@@ -156,5 +157,13 @@ class ModulController extends Controller
             DB::rollBack();
             throw $th;
         }
+    }
+
+    public function getModulByLevel(Request $request)
+    {
+        $data = DB::table('config_modul')->select('config_modul.uuid', 'config_modul.nama')->join('config_modul_akses', 'config_modul.uuid', 'config_modul_akses.id_config_modul')->where('config_modul_akses.id_level', $request->level)->get();
+        return response([
+            'data' => $data,
+        ]);
     }
 }

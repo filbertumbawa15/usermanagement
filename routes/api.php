@@ -31,6 +31,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('checkaccessmodule/{id}', [ConfigModulAksesController::class, 'checkAccessModule']);
     Route::get('getmenu', [ConfigModulMenuController::class, 'getMenu']);
     Route::get('configmodullevelakses/haspermission', [ConfigModulLevelAksesController::class, 'hasPermission']);
+
+    Route::get('getmodulbylevel', [ModulController::class, 'getModulByLevel']);
     Route::resource('modul', ModulController::class)->whereUuid('modul');
     Route::resource('menu', ConfigModulMenuController::class)->whereUuid('menu');
+
+    Route::get('getlevelaksesbymodul', [ConfigModulLevelAksesController::class, 'getLevelAksesByModul']);
 });

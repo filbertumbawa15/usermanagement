@@ -168,4 +168,32 @@ class ConfigModulLevelAksesController extends Controller
         $result = (new ConfigModulLevelAkses())->hasPermission($request->accessMenu);
         return $result;
     }
+
+    public function getLevelAksesByModul(Request $request) {
+        
+        $idLevel = $request->id_level;
+        $idConfig = $request->id_config;
+
+        $dataWhere = DB::table('config_modul_menu')->select(
+            'config_modul_menu.uuid',
+            'config_modul_menu.nama_menu',
+            DB::raw("IFNULL(config_modul_level_akses.baca, 'Tidak') as baca"),
+            DB::raw("IFNULL(config_modul_level_akses.tulis, 'Tidak') as tulis"),
+            DB::raw("IFNULL(config_modul_level_akses.ubah, 'Tidak') as ubah"),
+            DB::raw("IFNULL(config_modul_level_akses.hapus, 'Tidak') as hapus"),
+        )->leftJoin('config_modul_level_akses', 'config_modul_menu.uuid', 'config_modul_level_akses.id_menu')->where('config_modul_menu.id_config_modul', $idConfig)->where('config_modul_menu.id_parent', '!=', "0")->whereRaw(DB::raw('ISNULL(config_modul_level_akses.baca)'));
+
+        $data = DB::table('config_modul_menu')->select(
+            'config_modul_menu.uuid',
+            'config_modul_menu.nama_menu', 
+            'config_modul_level_akses.baca', 
+            'config_modul_level_akses.tulis', 
+            'config_modul_level_akses.ubah', 
+            'config_modul_level_akses.hapus'
+            )->leftJoin('config_modul_level_akses', 'config_modul_menu.uuid', 'config_modul_level_akses.id_menu')->where('config_modul_level_akses.id_level', $idLevel)->where('config_modul_menu.id_config_modul', $idConfig)->where('config_modul_menu.id_parent', '!=', "0")->union($dataWhere)->get();
+
+        
+        return $data;
+
+    }
 }
