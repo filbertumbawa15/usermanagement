@@ -65,7 +65,8 @@ class ModulController extends Controller
             'folder' => $request->folder,
             'icon' => $request->icon,
             'urutan' => $request->urutan,
-            'logo' => $request->logo,
+            // 'logo' => $request->logo,
+            'levelIds' => $request->levelIds,
         ];
 
         DB::beginTransaction();
@@ -117,7 +118,8 @@ class ModulController extends Controller
             'folder' => $request->folder,
             'icon' => $request->icon,
             'urutan' => $request->urutan,
-            'logo' => $request->logo,
+            // 'logo' => $request->logo,
+            'levelIds' => $request->levelIds,
         ];
 
         DB::beginTransaction();

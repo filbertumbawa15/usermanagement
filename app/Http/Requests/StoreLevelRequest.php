@@ -22,7 +22,7 @@ class StoreLevelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nama_level' => ['required', 'string', 'unique:config_level'],
         ];
     }
 }

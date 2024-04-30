@@ -16,14 +16,16 @@ class Level extends Model
         'updated_at'
     ];
 
+    protected $primaryKey = 'uuid';
+
     protected $table = "config_level";
 
     public function processStore(array $data): Level
     {
         $level = new Level();
         $level->nama_level = $data['level'];
-        $level->create_user = auth('api')->user()->user;
-        $level->modified_user = auth('api')->user()->user;
+        $level->create_user = auth('api')->user()->nama;
+        $level->modified_user = auth('api')->user()->nama;
 
         if (!$level->save()) {
             throw new \Exception("Error storing level");
@@ -35,7 +37,8 @@ class Level extends Model
     public function processUpdate(Level $level, array $data): Level
     {
         $level->nama_level = $data['level'];
-        $level->modified_user = auth('api')->user()->user;
+        $level->modified_user = auth('api')->user()->nama;
+
 
         if (!$level->save()) {
             throw new \Exception("Error updating level");
@@ -47,7 +50,7 @@ class Level extends Model
     public function processDestroy($id): Level
     {
         $level = new Level();
-        $statusProgress = $level->where('id', $id)->delete();
-        return $statusProgress;
+        $del = $level->where('uuid', $id)->delete();
+        return $level;
     }
 }

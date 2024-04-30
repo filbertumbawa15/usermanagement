@@ -59,7 +59,7 @@ class LevelController extends Controller
     public function store(StoreLevelRequest $request)
     {
         $data = [
-            'level' => $request->level,
+            'level' => $request->nama_level,
         ];
 
         DB::beginTransaction();
@@ -84,7 +84,7 @@ class LevelController extends Controller
      */
     public function show($id)
     {
-        $level = Level::where('uuid', $id);
+        $level = Level::where('uuid', $id)->first();
         if ($level) {
             return response([
                 'data' => $level
@@ -110,7 +110,7 @@ class LevelController extends Controller
     public function update(UpdateLevelRequest $request, Level $level)
     {
         $data = [
-            'level' => $request->level,
+            'level' => $request->nama_level,
         ];
 
         DB::beginTransaction();

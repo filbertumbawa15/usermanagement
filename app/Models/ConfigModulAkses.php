@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class ConfigModulAkses extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     protected $guarded = [
         'uuid',
@@ -16,17 +17,15 @@ class ConfigModulAkses extends Model
         'updated_at'
     ];
 
-    private $exceptAuthModule = [
-        'settings',
-    ];
+    protected $primaryKey = 'uuid';
 
-    public function processStore(array $data): ConfigModulAkses
+    public function processStore(Modul $modul, array $data): ConfigModulAkses
     {
         $configmodulakses = new ConfigModulAkses();
         $configmodulakses->id_level = $data['id_level'];
-        $configmodulakses->id_config_modul = $data['id_config_modul'];
-        $configmodulakses->create_user = auth('api')->user()->user;
-        $configmodulakses->modified_user = auth('api')->user()->user;
+        $configmodulakses->id_config_modul = $modul->uuid;
+        $configmodulakses->create_user = auth('api')->user()->nama;
+        $configmodulakses->modified_user = auth('api')->user()->nama;
 
         if (!$configmodulakses->save()) {
             throw new \Exception("Error storing config modul akses");
@@ -39,7 +38,7 @@ class ConfigModulAkses extends Model
     {
         $configModulAkses->id_level = $data['id_level'];
         $configModulAkses->id_config_modul = $data['id_config_modul'];
-        $configModulAkses->modified_user = auth('api')->user()->user;
+        $configModulAkses->modified_user = auth('api')->user()->nama;
 
         if (!$configModulAkses->save()) {
             throw new \Exception("Error storing config modul akses");

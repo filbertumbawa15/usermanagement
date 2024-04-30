@@ -11,7 +11,7 @@ class StoreConfigModulMenuRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class StoreConfigModulMenuRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'id_config_modul' => ['required', 'string'],
+            'nama_menu' => ['required', 'string', 'unique:config_modul_menu'],
+            'id_config_modul' => ['required', 'string'],
+            'link' => ['required', 'string', 'unique:config_modul_menu'],
+            'nomor_urutan' => ['required'],
         ];
     }
 }

@@ -34,6 +34,8 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('getmodulbylevel', [ModulController::class, 'getModulByLevel']);
     Route::resource('modul', ModulController::class)->whereUuid('modul');
+    
+    Route::get('menu/get', [ConfigModulMenuController::class, 'get']);
     Route::resource('menu', ConfigModulMenuController::class)->whereUuid('menu');
 
     Route::get('getlevelaksesbymodul', [ConfigModulLevelAksesController::class, 'getLevelAksesByModul']);

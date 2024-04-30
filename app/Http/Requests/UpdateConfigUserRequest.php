@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreModulRequest extends FormRequest
+class UpdateConfigUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,12 +22,7 @@ class StoreModulRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama' => ['required', 'string', 'unique:config_modul'],
-            'folder' => ['required', 'string', 'unique:config_modul'],
-            'icon' => ['required', 'string'],
-            'urutan' => ['required'],
-            'levelIds' => 'array',
-            'levelIds.*' => 'required|exists:config_level,uuid',
+            //
         ];
     }
 }

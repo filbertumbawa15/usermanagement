@@ -25,18 +25,66 @@ class ConfigModulMenuController extends Controller
 
         if (request('filters')) {
             foreach (request('filters') as $index => $filter) {
-                if($index == "nama_menu"){
+                if ($index == "nama_menu") {
                     $query = $query->orWhere('config_modul_menu.nama_menu', 'LIKE', "%$filter%");
                 } else if ($index == "nama_menu_parent") {
                     $query = $query->orWhere('menuparent.nama_menu', 'LIKE', "%$filter%");
                 } else if ($index == "nama_modul") {
                     $query = $query->orWhere('config_modul.nama', 'LIKE', "%$filter%");
-                } else{
+                } else {
                     $query = $query->orWhere("config_modul_menu.$index", 'LIKE', "%$filter%");
                 }
             }
 
             $totalRecords = $query->count();
+        }
+
+        if (request()->id_parent) {
+            $query->where('config_modul_menu.id_parent', '=', '0');
+        }
+
+        if (isset(request('sorts')['column']) && isset(request('sorts')['direction'])) {
+            $query = $query->orderBy(request('sorts')['column'], request('sorts')['direction']);
+        }
+
+        $totalPages = ceil($totalRecords / $limit);
+
+        $categories = $query->skip(($page - 1) * $limit)->take($limit)->get();
+
+        return response([
+            'totalRecords' => $totalRecords,
+            'totalPages' => $totalPages,
+            'data' => $categories,
+        ]);
+    }
+
+    public function get()
+    {
+        $limit = request('limit') ?? 10;
+        $page = request('page') ?? 1;
+
+
+        $query = DB::table((new ConfigModulMenu)->getTable())->select('config_modul_menu.*', 'config_modul.nama as nama_modul', 'menuparent.nama_menu as nama_menu_parent')->leftJoin('config_modul', 'config_modul_menu.id_config_modul', 'config_modul.uuid')->leftJoin('config_modul_menu as menuparent', 'config_modul_menu.id_parent', 'menuparent.uuid');
+        $totalRecords = $query->count();
+
+        if (request('filters')) {
+            foreach (request('filters') as $index => $filter) {
+                if ($index == "nama_menu") {
+                    $query = $query->orWhere('config_modul_menu.nama_menu', 'LIKE', "%$filter%");
+                } else if ($index == "nama_menu_parent") {
+                    $query = $query->orWhere('menuparent.nama_menu', 'LIKE', "%$filter%");
+                } else if ($index == "nama_modul") {
+                    $query = $query->orWhere('config_modul.nama', 'LIKE', "%$filter%");
+                } else {
+                    $query = $query->orWhere("config_modul_menu.$index", 'LIKE', "%$filter%");
+                }
+            }
+
+            $totalRecords = $query->count();
+        }
+
+        if (request()->id_parent == "0") {
+            $query->where('config_modul_menu.id_parent', '=', '0');
         }
 
         if (isset(request('sorts')['column']) && isset(request('sorts')['direction'])) {
@@ -72,7 +120,7 @@ class ConfigModulMenuController extends Controller
             'nama_menu' => $request->nama_menu,
             'icon' => $request->icon,
             'link' => $request->link,
-            'id_parent' => $request->id_parent,
+            'id_parent' => $request->id_parent ?? 0,
             'nomor_urutan' => $request->nomor_urutan,
         ];
 
@@ -97,7 +145,7 @@ class ConfigModulMenuController extends Controller
      */
     public function show($id)
     {
-        $configModulMenu = DB::table((new ConfigModulMenu)->getTable())->select('config_modul_menu.*', 'config_modul.nama as nama_modul', 'menuparent.nama_menu as nama_menu_parent')->leftJoin('config_modul', 'config_modul_menu.id_config_modul', 'config_modul.uuid')->leftJoin('config_modul_menu as menuparent', 'config_modul_menu.id_parent', 'menuparent.uuid')->where('config_modul_menu.uuid',$id)->first();
+        $configModulMenu = DB::table((new ConfigModulMenu)->getTable())->select('config_modul_menu.*', 'config_modul.nama as nama_modul', 'menuparent.nama_menu as nama_menu_parent')->leftJoin('config_modul', 'config_modul_menu.id_config_modul', 'config_modul.uuid')->leftJoin('config_modul_menu as menuparent', 'config_modul_menu.id_parent', 'menuparent.uuid')->where('config_modul_menu.uuid', $id)->first();
         if ($configModulMenu) {
             return response([
                 'data' => $configModulMenu,
@@ -116,7 +164,7 @@ class ConfigModulMenuController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateConfigModulMenuRequest $request, ConfigModulMenu $configModulMenu)
+    public function update(UpdateConfigModulMenuRequest $request, ConfigModulMenu $menu)
     {
         $data = [
             'id_config_modul' => $request->id_config_modul,
@@ -129,7 +177,7 @@ class ConfigModulMenuController extends Controller
 
         DB::beginTransaction();
         try {
-            $configModulMenu = (new ConfigModulMenu())->processUpdate($configModulMenu, $data);
+            $configModulMenu = (new ConfigModulMenu())->processUpdate($menu, $data);
             DB::commit();
 
             return response()->json([

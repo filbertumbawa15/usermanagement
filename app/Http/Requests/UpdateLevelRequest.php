@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateLevelRequest extends FormRequest
 {
@@ -22,7 +23,7 @@ class UpdateLevelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nama_level' => ['required', 'string', Rule::unique('config_level')->whereNotIn('uuid', [$this->uuid])],
         ];
     }
 }

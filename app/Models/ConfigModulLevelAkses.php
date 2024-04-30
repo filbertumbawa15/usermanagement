@@ -96,8 +96,8 @@ class ConfigModulLevelAkses extends Model
         // $configmodullevelakses->tulis = $data['tulis'];
         // $configmodullevelakses->ubah = $data['ubah'];
         // $configmodullevelakses->hapus = $data['hapus'];
-        // $configmodullevelakses->create_user = auth('api')->user()->user;
-        // $configmodullevelakses->modified_user = auth('api')->user()->user;
+        // $configmodullevelakses->create_user = auth('api')->user()->nama;
+        // $configmodullevelakses->modified_user = auth('api')->user()->nama;
 
         // if (!$configmodullevelakses->save()) {
         //     throw new \Exception("Error storing configmodullevelakses");
@@ -114,7 +114,7 @@ class ConfigModulLevelAkses extends Model
         $configModulLevelAkses->tulis = $data['tulis'];
         $configModulLevelAkses->ubah = $data['ubah'];
         $configModulLevelAkses->hapus = $data['hapus'];
-        $configModulLevelAkses->modified_user = auth('api')->user()->user;
+        $configModulLevelAkses->modified_user = auth('api')->user()->nama;
 
         if (!$configModulLevelAkses->save()) {
             throw new \Exception("Error updating configmodullevelakses");

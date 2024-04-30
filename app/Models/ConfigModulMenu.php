@@ -2,19 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class ConfigModulMenu extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     protected $guarded = [
         'uuid',
         'created_at',
         'updated_at'
     ];
+
+    protected $primaryKey = 'uuid';
 
     protected $table = "config_modul_menu";
 
@@ -71,7 +74,7 @@ class ConfigModulMenu extends Model
 
         foreach ($menu as $index => $row) {
             $hasPermission = $this->_validatePermission($row->nama_menu);
-            
+
             $value = $hasPermission['data'] == "" ? "" : $hasPermission['data'];
 
             if ($hasPermission['status'] || $row->id_parent == 0) {
@@ -118,7 +121,7 @@ class ConfigModulMenu extends Model
             ->where('config_modul_level_akses.id_level', auth()->user()->id_level)->get();
 
         // dd(array_column(json_decode($data_union), 'nama_menu'));
-        if(in_array($nama_menu, array_column(json_decode($data_union), 'nama_menu')) == false){
+        if (in_array($nama_menu, array_column(json_decode($data_union), 'nama_menu')) == false) {
             return [
                 'data' => "",
                 'status' => false,
@@ -133,12 +136,12 @@ class ConfigModulMenu extends Model
         //     ->where('useracl.user_id', auth()->user()->id)
         //     ->unionAll($data_union)
         //     ->get();
-        
-            // dd($data->tosql());
+
+        // dd($data->tosql());
         // if ($this->in_array_custom($method, $data->toArray()) == false && in_array($method, $this->exceptAuth['method']) == false) {
         //     return false;
         // }
-        $dataFilter = array_filter($data_union->toArray(), function($obj) use ($nama_menu){
+        $dataFilter = array_filter($data_union->toArray(), function ($obj) use ($nama_menu) {
             return $obj->nama_menu = $nama_menu;
         });
         return [
