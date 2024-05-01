@@ -30,6 +30,8 @@ class ConfigModulMenu extends Model
         $configmodulmenu->link = $data['link'];
         $configmodulmenu->id_parent = $data['id_parent'];
         $configmodulmenu->nomor_urutan = $data['nomor_urutan'];
+        $configmodulmenu->create_user = auth('api')->user()->nama;
+        $configmodulmenu->modified_user = auth('api')->user()->nama;
 
         if (!$configmodulmenu->save()) {
             throw new \Exception('Error storing config module menu');
@@ -46,6 +48,7 @@ class ConfigModulMenu extends Model
         $configModulMenu->link = $data['link'];
         $configModulMenu->id_parent = $data['id_parent'];
         $configModulMenu->nomor_urutan = $data['nomor_urutan'];
+        $configModulMenu->modified_user = auth('api')->user()->nama;
 
         if (!$configModulMenu->save()) {
             throw new \Exception('Error storing config module menu');

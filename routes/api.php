@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ConfigModulMenuController;
 use App\Http\Controllers\Api\ConfigModulLevelAksesController;
 use App\Http\Controllers\Api\LevelController;
 use App\Http\Controllers\Api\ModulController;
+use App\Http\Controllers\Api\ConfigUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('login', [AuthController::class, 'login']);
+Route::get('photo/image/{field}/{filename}/{type}/{aksi}', [ConfigUserController::class, 'getImage']);
 
 Route::middleware(['auth:api'])->group(function () {
     Route::resource('level', LevelController::class)->whereUuid('level');
@@ -40,4 +42,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('getlevelaksesbymodul', [ConfigModulLevelAksesController::class, 'getLevelAksesByModul']);
     Route::resource('levelakses', ConfigModulLevelAksesController::class)->whereUuid('levelakses');
+
+    Route::post('user/update/{param}', [ConfigUserController::class, 'update']);
+    Route::resource('user', ConfigUserController::class)->whereUuid('user');
 });

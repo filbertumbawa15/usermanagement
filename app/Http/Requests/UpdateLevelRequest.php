@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class UpdateLevelRequest extends FormRequest
 {
@@ -12,7 +13,8 @@ class UpdateLevelRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $data = DB::table('config_modul_level_akses')->leftJoin('config_level', 'config_modul_level_akses.id_level', 'config_level.uuid')->leftJoin('config_modul_menu', 'config_modul_level_akses.id_menu', 'config_modul_menu.uuid')->where('config_modul_level_akses.id_level', auth()->user()->id_level)->where('config_modul_menu.link', $this->namamenu)->first();
+        return $data->ubah == "Tidak" ? false : true;
     }
 
     /**
